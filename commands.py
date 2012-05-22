@@ -153,7 +153,7 @@ def crunch(arms,strands,link3,segment_list):
     # check if repeats should be allowed 
     # (default is no input meaning no repeats allowed)
     if len(crunch_dat) == 4:
-        repeat = None
+        repeat = 0
         arm, start, end, criton = crunch_dat
     else: arm, start, end, criton, repeat = crunch_dat
 

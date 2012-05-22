@@ -113,7 +113,7 @@ def repeats(strands, segment, criton, repeat, decision):
                 testseg = strand[base:base + criton]
                 if testseg == segment: repeatseg += 1
 
-    if repeat == None and repeatseg > 0: 
+    if repeat == 0 and repeatseg > 0: 
         print "CRITON size is too small!"
         decision = 'r'
     elif repeat >= repeatseg: pass
