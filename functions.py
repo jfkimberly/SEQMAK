@@ -1,4 +1,5 @@
 import random
+from itertools import permutations as perm
 
 def seqgen(criton):
     """ returns a segment of random DNA bases starting at 'start' and
@@ -58,44 +59,65 @@ def linker5():
 
 
 def user_decision():
-    """ 'user_decision' function used in the 'crunch' function. Keeps
-    looping until an appropriate 'y' (yes) or 'n' (no) answer is given
-    and returns a decision. 
+    """ 'user_decision' function used in the 'crunch' function. Keeps looping
+    until an appropriate 'y' (yes), 'n' (no), or 'N' (abort) answer is given and
+    returns a decision.
 
     """
 
     while True:
-        use = raw_input("Use anyways? (y/n)\n")
+        use = raw_input()
         if use == 'y': 
             decision = 'a'
             break
         elif use == 'n': 
             decision = 'r'
             break
-        else: print "Please answer 'y' or 'n'"
+        elif use == 'N':
+            decision = 'N'
+        else: print "Please answer 'y', 'n', or 'N'"
 
     return decision
 
 
-def seggen(segment_list, segsize):
+def seggen(segment_list, all_seg_list):
     """ 'seggen' function. """
 
-    # produce new random 'segment' of 'segsize' which is not in 
-    # 'segment_list' 
+    # produce new random 'segment' of 'segsize' which is not in 'segment_list'
     while True:
-        segment = seqgen(segsize)
-        print segment
+        try:
+            segment = random.choice(all_seg_list)
 
-        if segment_list.count(segment) == 0: 
+        except IndexError:
+            print "All segments of this size have been already used at least once"
+            print "Repeat a segment? (y/n)"
+            decision = user_decision()
+
+            if decision == 'y':
+                
+                # chooses an already used random segment from 'segment_list'
+                while True:
+                    segment = random.choice(segment_list)
+                    segcount = segment_list.count(segment)
+
+                    print "How about this segment? (y/n; N to abort)"
+                    print segment
+                    print "This segment has been used %d times" % (segcount)
+
+                    repseg_decision = user_decision()
+
+                    if repseg_decision == 'y': break
+                    elif repseg_decision == 'N':
+                        segment = None
+                        break
+
+            else: break
+
+        else:
+            print segment
             print "(a)ccept or (r)eject or (s)et"
             decision = raw_input()
             if decision == 'a' or decision == 's': break
-
-        else: 
-            segcount = segment_list.count(segment)
-            print "This segment has been used %d times" % (segcount)
-            decision = user_decision()
-            if decision == 'a': break
 
     return segment, decision
 
@@ -105,7 +127,7 @@ def repeats(strands, segment, criton, repeat, decision):
 
     """
 
-    # check for repeating segments
+    # check for repeating segments in 'strands' for all generated sequences
     repeatseg = 0
     for strand in strands.values():
         for base in range(len(strand) - criton + 1):
@@ -114,16 +136,18 @@ def repeats(strands, segment, criton, repeat, decision):
                 if testseg == segment: repeatseg += 1
 
     if repeat == 0 and repeatseg > 0: 
-        print "CRITON size is too small!"
+        print "There are repeated segments with the given CRITON size"
+        print "Please increase CRITON size"
         decision = 'r'
     elif repeat >= repeatseg: pass
     else: 
         print "There are %d repeats of this segment" % (repeatseg)
+        print "Use anyways (y/n)?"
         decision = user_decision()
 
     return decision
 
-def armgen(arms, segment_list, crunch_dat):
+def armgen(arms, segment, crunch_dat):
     """ 'armgen' function; Used in the 'crunch' function. Receives dictionary
     'arms' and returns the dictionary 'arms' replaced with the randomly
     generated arm segment
@@ -135,8 +159,7 @@ def armgen(arms, segment_list, crunch_dat):
     end = crunch_dat[2]
 
     # retrieve latest segment and complementary segment from 'segment_list'
-    segment = segment_list[-2][:]
-    comp_segment = segment_list[-1][:]
+    comp_segment = compgen(segment)
 
     # change arms e.g. arm1 => 'xxxx' -> 'AGCT'
     arms['arm'+str(arm)][0] =\

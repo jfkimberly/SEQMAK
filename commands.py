@@ -18,11 +18,11 @@
 
 import os
 import re
+import random
 from itertools import count, izip, product
 from functions import *
 
 strands = {}
-
 
 def help():
     """ 'help' command. prints out all possible commands. """
@@ -38,6 +38,7 @@ def help():
     print "8. exit"
     
     print "Use '--help' for more information. e.g. 'na --help'"
+
     return 0
 
 
@@ -96,8 +97,8 @@ def show(arms):
     for key in sorted(arms.iterkeys()):
         print ""
         print key
-        print arms[key][0]
-        print arms[key][1]
+        print re.sub("(.{5})", "\\1 ", arms[key][0])
+        print re.sub("(.{5})", "\\1 ", arms[key][1])
 
     return None
 
@@ -133,7 +134,7 @@ def linker():
     return link3, link5
     
 
-def crunch(arms,strands,link3,segment_list):
+def crunch(arms,strands,link3,segment_list,all_seg_list):
     """ randomly generates or the user defines a sequence of bases for the each
     of the arms and returns dictionary 'arms' which consists of the arms as
     keys, e.g. arm1, arm2, etc., and each arms' sequence and its complementary
@@ -159,12 +160,19 @@ def crunch(arms,strands,link3,segment_list):
 
     # segment size to crunch (length of random bases to produce)
     segsize = end - start + 1
+    critkey = 'crit' + str(segsize)
+    print "critkey", critkey
+    # check if 'all_seg_list' has a key of criton size and create one if all
+    # segments of size 'criton if one doesn't exist 
+    if not all_seg_list.has_key(critkey):
+        all_seg_list[critkey] =\
+            [''.join(x) for x in product('AGCT', repeat=segsize)]
 
     while True:
 
-        # produce a random segment 'segment' of 'segsize and chooses to
+        # produce a random segment 'segment' of 'segsize' and chooses to
         # (a)ccept, (r)eject, or (s)et in 'decision'.
-        segment, decision = seggen(segment_list, segsize)
+        segment, decision = seggen(segment_list, all_seg_list[critkey])
                     
         # check the number of repeats of 'segment' in 'strands' and changes
         # 'decision' accordingly
@@ -181,9 +189,13 @@ def crunch(arms,strands,link3,segment_list):
             # add segment and complementary segment to 'segment_list'
             segment_list.append(segment)
             segment_list.append(comp_segment)
+            
+            # pop the segment from 'all_seg_list'
+            all_seg_list[critkey].remove(segment)
+            all_seg_list[critkey].remove(comp_segment)
 
             # change the specified arm segment
-            arms = armgen(arms,segment_list,crunch_dat)
+            arms = armgen(arms,segment,crunch_dat)
             
             # change the corresponding strand segment            
             strands = strandgen(arms,link3)
@@ -200,16 +212,20 @@ def crunch(arms,strands,link3,segment_list):
             if segment != '':
                 segment_list.append(segment)
                 segment_list.append(comp_segment)
+                
+                # pop the segment from 'all_seg_list'
+                all_seg_list[critkey].remove(segment)
+                all_seg_list[critkey].remove(comp_segment)
 
-            # change the specified arm segment
-                arms = armgen(arms,segment_list,crunch_dat)
+                # change the specified arm segment
+                arms = armgen(arms,segment,crunch_dat)
             
-            # change the corresponding strand segment            
+                # change the corresponding strand segment            
                 strands = strandgen(arms,link3)
 
             break
 
-    return arms, strands, segment_list
+    return arms, strands, segment_list, all_seg_list
 
 
 def strandgen(arms,link3,link5=None):
