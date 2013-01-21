@@ -26,6 +26,8 @@ Read the *Introduction* of the manual for information on running the program.
 
 
 
-[first]: N. C. Seeman and N. R. Kallenbach, *``Design of immobile Nucleic Acid Junctions''*,  *Biophysical Journal* **44**, 201-209 (1983)
+[first]: <http://www.cell.com/biophysj/abstract/S0006-3495(83)84292-1>
+"N. C. Seeman and N. R. Kallenbach, *"Design of immobile Nucleic Acid Junctions"*,  *Biophysical Journal* **44**, 201-209 (1983)"
 
-[second]: N. C. Seeman, *``De Novo Design of Sequences for Nucleic Acid Structural Engineering''*, *Journal of Biomolecular Structure & Dynamics* **8**, 573-581 (1990)
+[second]: <http://www.tandfonline.com/doi/abs/10.1080/07391102.1990.10507829#preview>
+"N. C. Seeman, *"De Novo Design of Sequences for Nucleic Acid Structural Engineering"*, *Journal of Biomolecular Structure & Dynamics* **8**, 573-581 (1990)"
