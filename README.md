@@ -17,6 +17,27 @@ Dependencies
 ------------
 `SEQMAK` is written in Python 2.7. In order to run the program you must have Python installed on your computer (preferably version 2.7x but version 2.4x should also work). This software has not been tested with Python 3.0 or higher, so I cannot guarantee it will work under those environments. If you do not have Python installed on your computer, you may download the latest version at [http://www.python.org/download/](http://www.python.org/download/).
 
+All python package dependencies can be installed using `pip`. `pip` does not come pre-installed  with the python virtual machine, so you need to install it manually.
+
+* Install pip (if you do not have it installed)
+
+`# yum install python-pip`
+	
+or 
+
+`$ sudo apt-get install python-pip`
+	
+for linux machines.
+
+* Upgrade `pip`.
+
+`$ sudo pip install pip --upgrade`
+
+* Install all required dependencies by typing
+   
+`$ pip install -r requirements.txt`
+
+
 
 Usage
 -----
