@@ -26,19 +26,19 @@ def main():
 
     while True:
         
-        command = raw_input("Enter a command (type 'help' for help):\n")
+        command = raw_input("Enter a command (type 'help' or 'h' for help):\n")
 
         if command == 'exit': break
 
         # 'help' command
         # prints a list of possible commands
-        elif command == 'help':
+        elif command == 'help' or command == 'h':
             commands.help()
 
         # 'newarm (na)' command
         # creates newarms and their corresponding segment sequences in a
         # dictionary 'arms'
-        elif command == 'newarms' or command ==  'na': 
+        elif command == 'newarms' or command == 'na': 
             arms = commands.newarms()
                 
         # 'show (s)' command
