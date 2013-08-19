@@ -44,7 +44,10 @@ def main():
         # 'show (s)' command
         # prints out the created arms
         elif command == 'show' or command == 's':
-            commands.show(arms)
+            try:
+                commands.show(arms)
+            except UnboundLocalError:
+                print "Generate your arms first!"
 
         # 'link (l)' command
         elif command == 'link' or command == 'l':
