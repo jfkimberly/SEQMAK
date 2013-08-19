@@ -68,15 +68,24 @@ def main():
         # 'strandgen (sg)' command
         # 
         elif command == 'strandgen' or command == 'sg':
-            strands = commands.strandgen(arms, l3_list, l5_list)
+            try:
+                strands = commands.strandgen(arms, l3_list, l5_list)
+            except UnboundLocalError:
+                print "Something's wrong. Maybe you missed a step?"
 
         # 'repeatcheck (rp) command
         elif command == 'repeatcheck' or command == 'rp':
-            commands.repeatcheck(strands)
+            try:
+                commands.repeatcheck(strands)
+            except UnboundLocalError:
+                print "Something's wrong. Maybe you missed a step?"
 
         # 'save (sv)' command
         elif command == 'save' or command == 'sv':
-            commands.save(arms, strands)
+            try:
+                commands.save(arms, strands)
+            except UnboundLocalError:
+                print "Something's wrong. Maybe you missed a step?"
 
         else: print "What? Retype command!"
 
