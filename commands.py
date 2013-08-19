@@ -39,7 +39,7 @@ def help():
 
     print "Use '--help' for more information. e.g. 'na --help'"
 
-    return 0
+    return None
 
 
 def newarms():
@@ -60,8 +60,19 @@ def newarms():
         # user input for the first iteration through the outer while loop should
         # be 'arm_numbers' = 4 and 'arm_length' = 4 and for the second iteration
         # the input should be 'arm_numbers' = 4 and 'arm_length' = 8.
-        arm_numbers  = int(raw_input("How many arms do you want?\n"))
-        arm_length = int(raw_input("What is the length of the subarms of these arms?\n"))
+        while True:
+            try:
+                arm_numbers  = int(raw_input("How many arms do you want?\n"))
+            except ValueError:
+                print "Come again?"
+            else: break
+
+        while True:
+            try:
+                arm_length = int(raw_input("What is the length of the subarms of these arms?\n"))
+            except ValueError:
+                print "Come again?"
+            else: break
 
         # creates a dictionary 'arms' where the keys are the arms, i.e. arm1,
         # arm2, arm3, etc. and their corresponding values are 2-element lists of
@@ -113,20 +124,27 @@ def linker():
     link5 = linker5()
 
     # join the arms to create strands
-    for l5 in link5:
-        for l3_index, l3 in izip(count(), link3):
+    while True:
+        try:
+            for l5 in link5:
+                for l3_index, l3 in izip(count(), link3):
 
-            if l3[-1] == l5[0]:
-                forearms = l3[:]
-                index = l3_index
-                link3 = [x for x in link3 if x != l3]
+                    if l3[-1] == l5[0]:
+                        forearms = l3[:]
+                        index = l3_index
+                        link3 = [x for x in link3 if x != l3]
 
-            if l3[0] == l5[1]:
-                postarms = l3[:]
-#                index = l3_index
-                link3 = [x for x in link3 if x != l3]
+                    if l3[0] == l5[1]:
+                        postarms = l3[:]
+        #                index = l3_index
+                        link3 = [x for x in link3 if x != l3]
 
-        link3.insert(index, forearms+postarms)
+                link3.insert(index, forearms+postarms)
+            break
+        except (IndexError, UnboundLocalError):
+            print "Hmm, something seems off, try the 'link' command again."
+            break
+
 
     print "link3", link3
     print "link5", link5
@@ -149,67 +167,54 @@ def crunch(arms,strands,link3,segment_list,all_seg_list):
 
     print "Please enter the following"
     print "arm #, starting base, end base, CRITON size, # of repeats (default: None)"
-    crunch_dat = map(int,raw_input().split(','))
+    while True:
+        try:
+            crunch_dat = map(int,raw_input().split(','))
+        except ValueError:
+            print "Your input doesn't make any sense!"
+            break
+        else: break
 
     # check if repeats should be allowed
     # (default is no input meaning no repeats allowed)
-    if len(crunch_dat) == 4:
-        repeat = 0
-        arm, start, end, criton = crunch_dat
-    else: arm, start, end, criton, repeat = crunch_dat
+    try:
+        if len(crunch_dat) == 4:
+            repeat = 0
+            arm, start, end, criton = crunch_dat
+        else: arm, start, end, criton, repeat = crunch_dat
+    except (ValueError, UnboundLocalError) as error:
+        print error
 
-    # segment size to crunch (length of random bases to produce)
-    segsize = end - start + 1
-    critkey = 'crit' + str(segsize)
-    print "critkey", critkey
-    # check if 'all_seg_list' has a key of criton size and create one if all
-    # segments of size 'criton if one doesn't exist
-    if not all_seg_list.has_key(critkey):
-        all_seg_list[critkey] =\
-            [''.join(x) for x in product('AGCT', repeat=segsize)]
+    else:
+        # segment size to crunch (length of random bases to produce)
+        segsize = end - start + 1
+        critkey = 'crit' + str(segsize)
+        print "critkey", critkey
+        # check if 'all_seg_list' has a key of criton size and create one if all
+        # segments of size 'criton if one doesn't exist
+        if not all_seg_list.has_key(critkey):
+            all_seg_list[critkey] =\
+                [''.join(x) for x in product('AGCT', repeat=segsize)]
 
-    while True:
+        while True:
 
-        # produce a random segment 'segment' of 'segsize' and chooses to
-        # (a)ccept, (r)eject, or (s)et in 'decision'.
-        segment, decision = seggen(segment_list, all_seg_list[critkey])
+            # produce a random segment 'segment' of 'segsize' and chooses to
+            # (a)ccept, (r)eject, or (s)et in 'decision'.
+            segment, decision = seggen(segment_list, all_seg_list[critkey])
 
-        # check the number of repeats of 'segment' in 'strands' and changes
-        # 'decision' accordingly
-        decision = repeats(strands, segment, criton, repeat, decision)
+            # check the number of repeats of 'segment' in 'strands' and changes
+            # 'decision' accordingly
+            decision = repeats(strands, segment, criton, repeat, decision)
 
-        # actions according to 'decision'
-        if decision == 'r':
-            break
+            # actions according to 'decision'
+            if decision == 'r':
+                break
 
-        elif decision == 'a':
-            # create complementary segment
-            comp_segment = compgen(segment)
+            elif decision == 'a':
+                # create complementary segment
+                comp_segment = compgen(segment)
 
-            # add segment and complementary segment to 'segment_list'
-            segment_list.append(segment)
-            segment_list.append(comp_segment)
-
-            # pop the segment from 'all_seg_list'
-            all_seg_list[critkey].remove(segment)
-            all_seg_list[critkey].remove(comp_segment)
-
-            # change the specified arm segment
-            arms = armgen(arms,segment,crunch_dat)
-
-            # change the corresponding strand segment
-            strands = strandgen(arms,link3)
-
-            break
-
-        elif decision == 's':
-            # create segment & complementary segment
-            segment = raw_input("Enter desired segment:\n")
-            comp_segment = compgen(segment)
-
-            # add segment and complementary segment to 'segment_list' only if
-            # the segment is a nonempty string
-            if segment != '':
+                # add segment and complementary segment to 'segment_list'
                 segment_list.append(segment)
                 segment_list.append(comp_segment)
 
@@ -223,9 +228,32 @@ def crunch(arms,strands,link3,segment_list,all_seg_list):
                 # change the corresponding strand segment
                 strands = strandgen(arms,link3)
 
-            break
+                break
 
-    return arms, strands, segment_list, all_seg_list
+            elif decision == 's':
+                # create segment & complementary segment
+                segment = raw_input("Enter desired segment:\n")
+                comp_segment = compgen(segment)
+
+                # add segment and complementary segment to 'segment_list' only if
+                # the segment is a nonempty string
+                if segment != '':
+                    segment_list.append(segment)
+                    segment_list.append(comp_segment)
+
+                    # pop the segment from 'all_seg_list'
+                    all_seg_list[critkey].remove(segment)
+                    all_seg_list[critkey].remove(comp_segment)
+
+                    # change the specified arm segment
+                    arms = armgen(arms,segment,crunch_dat)
+
+                    # change the corresponding strand segment
+                    strands = strandgen(arms,link3)
+
+                break
+
+        return arms, strands, segment_list, all_seg_list
 
 
 def strandgen(arms,link3,link5=None):
@@ -238,13 +266,18 @@ def strandgen(arms,link3,link5=None):
 
     for strand_count, arm_num in izip(count(),link3):
 
-        temp_strand = ''
-        for arm_count, arm_index in izip(count(),arm_num):
-            if arm_count % 2 == 0:
-                temp_strand += arms['arm'+arm_index][0]
-            else:
-                temp_strand += arms['arm'+arm_index][1][::-1]
-        strands['strand'+str(strand_count+1)] = temp_strand[:]
+        try:
+            temp_strand = ''
+            for arm_count, arm_index in izip(count(),arm_num):
+                if arm_count % 2 == 0:
+                    temp_strand += arms['arm'+arm_index][0]
+                else:
+                    temp_strand += arms['arm'+arm_index][1][::-1]
+            strands['strand'+str(strand_count+1)] = temp_strand[:]
+
+        except KeyError as error:
+            print "Can't generate strands. Try 'link' command again then 'strandgen'."
+            break
 
     strand_count = 1
     for key in sorted(strands.iterkeys()):
@@ -268,10 +301,22 @@ def repeatcheck(strands):
     print "Enter min. CRITON size, max. CRITON size, min. # of repeats, max. #\
 of repeats"
 
+#    while True:
+#        try:
+#            crunch_dat = map(int,raw_input().split(','))
+#        except ValueError:
+#            print "Your input doesn't make any sense!"
+#            break
+#        else: break
+
+
     while True:
-        repeat_dat = map(int, raw_input().split(','))
-        if len(repeat_dat) == 4: break
-        else: print "Please enter 4 numbers"
+        try:
+            repeat_dat = map(int, raw_input().split(','))
+            if len(repeat_dat) == 4: break
+            else: print "Please enter 4 numbers"
+        except (ValueError, UnboundLocalError):
+            print "Please enter only integers!"
 
     mincrit, maxcrit, minrep, maxrep = repeat_dat
 
@@ -300,11 +345,7 @@ of repeats"
                         print "strand # => base position"
                         for strand_num, pos in reppos_list:
                             print "%s => %d" % (strand_num, pos + 1)
-                        print
-
-
-
-
+                        print ""
 
 
 def save(arms, strands):
@@ -338,7 +379,7 @@ def save(arms, strands):
         elif decision == 'n': return None
         else: print "please enter 'y' or 'n'"
 
-    return 0
+    return None
 
 
 

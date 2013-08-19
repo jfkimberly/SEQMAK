@@ -53,10 +53,17 @@ def main():
         # 'crunch (c)' command
         # produces random sequences of 
         elif command == 'crunch' or command == 'c':
-            print "strands", strands
-            arms,strands,segment_list,all_seg_list =\
-                commands.crunch(arms,strands,l3_list,segment_list,all_seg_list)
-            print segment_list
+            try:
+                strands
+            except UnboundLocalError:
+                print "Maybe you should generate your strands first ('strandgen')?"
+            else:
+                try:
+                    arms,strands,segment_list,all_seg_list =\
+                        commands.crunch(arms,strands,l3_list,segment_list,all_seg_list)
+                    print segment_list
+                except TypeError:
+                    print "Something's not right. Try 'crunch' again."
 
         # 'strandgen (sg)' command
         # 
@@ -74,7 +81,7 @@ def main():
         else: print "What? Retype command!"
 
 
-    return 0
+    return None
 
 
 if __name__ == '__main__':
