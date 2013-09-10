@@ -35,7 +35,8 @@ def help():
     print "5. strandgen (sg)"
     print "6. repeatcheck (rp)"
     print "7. save (sv)"
-    print "8. exit"
+    print "8. load (ld)"
+    print "9. exit"
 
     print "Use '--help' for more information. e.g. 'na --help'"
 
@@ -380,6 +381,29 @@ def save(arms, strands):
         else: print "please enter 'y' or 'n'"
 
     return None
+
+def load():
+    """loads a file containing sequence information of strands from the user and
+    returns a dictionary 'strands'
+
+    """
+
+    try:
+        user_input = raw_input("Enter the name of the file (e.g., strands.txt)\
+ or 'q' to exit command:\n")
+        if user_input == 'q': return 0
+        f = open(user_input, 'r')
+    except IOError:
+        print "file doesn't exist!"
+        return 0
+
+    strands = {}
+
+    for index,lines in izip(count(),f):
+        strands['strand'+str(index+1)] = lines.upper().strip()
+        print '{}: {}'.format('strand'+str(index+1), strands['strand'+str(index+1)])
+
+    return strands
 
 
 

@@ -18,3 +18,7 @@ manual/introduction.tex
 manual/prerequisites.tex
 manual/program.tex
 strands
+.ropeproject/config.py
+manual/SEQMAK_MANUAL.bbl
+manual/figures/DAE.pdf
+errorlog

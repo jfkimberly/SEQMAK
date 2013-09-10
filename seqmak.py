@@ -90,6 +90,12 @@ def main():
             except UnboundLocalError:
                 print "Something's wrong. Maybe you missed a step?"
 
+        elif command == 'load' or command == 'ld':
+            try:
+                strands = commands.load()
+            except (UnboundLocalError, TypeError):
+                print "Try again?"
+            
         else: print "What? Retype command!"
 
 
