@@ -72,8 +72,13 @@ def linker5():
 
     """
 
-    print "Enter the arm and it's 5'-linked arm:"
-    return list(chunks(raw_input().split(','),2))
+    print "Enter the arm and it's 5'-linked arm (press `Enter' if there are\
+ none):"
+    link5 = raw_input()
+    if link5 :
+        return list(chunks(link5.split(','),2))
+    else :
+        return []
 
 
 def user_decision():
