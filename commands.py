@@ -398,9 +398,9 @@ def load():
         return 0
 
     strands = {}
-
+    print ''
     for index,lines in izip(count(),f):
-        strands['strand'+str(index+1)] = lines.upper().strip()
+        strands['strand'+str(index+1)] = lines.upper().replace(" ","")
         print '{}: {}'.format('strand'+str(index+1), strands['strand'+str(index+1)])
 
     return strands
