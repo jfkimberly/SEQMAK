@@ -367,7 +367,8 @@ def save(arms, strands):
             arm_count = 1
             strand_count = 1
             for key in sorted(arms.iterkeys()):
-                strandfile.write(("arm%d\n") % (arm_count))
+                strandfile.write(key)
+                strandfile.write("\n")
                 strandfile.write(("%s\n%s\n\n") % (arms[key][0],arms[key][1]))
                 arm_count += 1
 
