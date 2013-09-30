@@ -381,8 +381,13 @@ def load():
     strands = {}
     print ''
     for index,lines in izip(count(),f):
-        strands['strand'+str(index+1)] = lines.upper().replace(" ","")
-        print '{}: {}'.format('strand'+str(index+1), strands['strand'+str(index+1)])
+
+        sequence = lines.upper().replace(" ","").strip()
+        if sequence:
+            strands['strand'+str(index+1)] = sequence
+            print '{}: {}'.format('strand'+str(index+1), strands['strand'+str(index+1)])
+
+    f.close()
 
     return strands
 
