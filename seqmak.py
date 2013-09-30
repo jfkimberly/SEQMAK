@@ -22,7 +22,6 @@ def main():
     """ Main function to determine what command to enter """
 
     segment_list = []
-    all_seg_list = {}
 
     while True:
         
@@ -62,8 +61,8 @@ def main():
                 print "Maybe you should generate your strands first ('strandgen')?"
             else:
                 try:
-                    arms,strands,segment_list,all_seg_list =\
-                        commands.crunch(arms,strands,l3_list,segment_list,all_seg_list)
+                    arms,strands,segment_list =\
+                        commands.crunch(arms,strands,l3_list,segment_list)
                     print segment_list
                 except TypeError:
                     print "Something's not right. Try 'crunch' again."

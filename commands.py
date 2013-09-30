@@ -153,7 +153,7 @@ def linker():
     return link3, link5
 
 
-def crunch(arms,strands,link3,segment_list,all_seg_list):
+def crunch(arms,strands,link3,segment_list):
     """ randomly generates or the user defines a sequence of bases for the each
     of the arms and returns dictionary 'arms' which consists of the arms as
     keys, e.g. arm1, arm2, etc., and each arms' sequence and its complementary
@@ -183,6 +183,7 @@ def crunch(arms,strands,link3,segment_list,all_seg_list):
             repeat = 0
             arm, start, end, criton = crunch_dat
         else: arm, start, end, criton, repeat = crunch_dat
+
     except (ValueError, UnboundLocalError) as error:
         print error
 
@@ -190,19 +191,15 @@ def crunch(arms,strands,link3,segment_list,all_seg_list):
         # segment size to crunch (length of random bases to produce)
         segsize = end - start + 1
         critkey = 'crit' + str(segsize)
-        print "critkey", critkey
-        # check if 'all_seg_list' has a key of criton size and create one if all
-        # segments of size 'criton if one doesn't exist
-        if not all_seg_list.has_key(critkey):
-            all_seg_list[critkey] =\
-                [''.join(x) for x in product('AGCT', repeat=segsize)]
+        print critkey
+
 
         while True:
 
             # produce a random segment 'segment' of 'segsize' and chooses to
             # (a)ccept, (r)eject, or (s)et in 'decision'.
-            segment, decision = seggen(segment_list, all_seg_list[critkey])
-
+            segment, decision = seggen(segsize, segment_list)
+            
             # check the number of repeats of 'segment' in 'strands' and changes
             # 'decision' accordingly
             decision = repeats(strands, segment, criton, repeat, decision)
@@ -219,10 +216,6 @@ def crunch(arms,strands,link3,segment_list,all_seg_list):
                 segment_list.append(segment)
                 segment_list.append(comp_segment)
 
-                # pop the segment from 'all_seg_list'
-                all_seg_list[critkey].remove(segment)
-                all_seg_list[critkey].remove(comp_segment)
-
                 # change the specified arm segment
                 arms = armgen(arms,segment,crunch_dat)
 
@@ -233,7 +226,7 @@ def crunch(arms,strands,link3,segment_list,all_seg_list):
 
             elif decision == 's':
                 # create segment & complementary segment
-                segment = raw_input("Enter desired segment:\n")
+                segment = raw_input("Enter desired segment:\n").upper()
                 comp_segment = compgen(segment)
 
                 # add segment and complementary segment to 'segment_list' only if
@@ -241,10 +234,6 @@ def crunch(arms,strands,link3,segment_list,all_seg_list):
                 if segment != '':
                     segment_list.append(segment)
                     segment_list.append(comp_segment)
-
-                    # pop the segment from 'all_seg_list'
-                    all_seg_list[critkey].remove(segment)
-                    all_seg_list[critkey].remove(comp_segment)
 
                     # change the specified arm segment
                     arms = armgen(arms,segment,crunch_dat)
@@ -254,7 +243,7 @@ def crunch(arms,strands,link3,segment_list,all_seg_list):
 
                 break
 
-        return arms, strands, segment_list, all_seg_list
+    return arms, strands, segment_list
 
 
 def strandgen(arms,link3,link5=None):
@@ -301,15 +290,6 @@ def repeatcheck(strands):
 
     print "Enter min. CRITON size, max. CRITON size, min. # of repeats, max. #\
 of repeats"
-
-#    while True:
-#        try:
-#            crunch_dat = map(int,raw_input().split(','))
-#        except ValueError:
-#            print "Your input doesn't make any sense!"
-#            break
-#        else: break
-
 
     while True:
         try:

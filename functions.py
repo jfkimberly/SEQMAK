@@ -103,43 +103,30 @@ def user_decision():
     return decision
 
 
-def seggen(segment_list, all_seg_list):
+def seggen(segsize,segment_list):
     """ 'seggen' function. """
 
     # produce new random 'segment' of 'segsize' which is not in 'segment_list'
     while True:
-        try:
-            segment = random.choice(all_seg_list)
+        segment = seqgen(segsize)
 
-        except IndexError:
-            print "All segments of this size have been already used at least once"
-            print "Repeat a segment? (y/n)"
+        if segment in segment_list: 
+            print "{SEGMENT} has been used {TIMES} times\n".format(SEGMENT=segment, TIMES=segment_list.count(segment))
+            print "Use anyway? (y/n)"
             decision = user_decision()
 
-            if decision == 'y':
-                
-                # chooses an already used random segment from 'segment_list'
-                while True:
-                    segment = random.choice(segment_list)
-                    segcount = segment_list.count(segment)
+            if decision == 'a': break
 
-                    print "How about this segment? (y/n; N to abort)"
-                    print segment
-                    print "This segment has been used %d times" % (segcount)
-
-                    repseg_decision = user_decision()
-
-                    if repseg_decision == 'y': break
-                    elif repseg_decision == 'N':
-                        segment = None
-                        break
-
-            else: break
 
         else:
             print segment
             print "(a)ccept or (r)eject or (s)et"
-            decision = raw_input()
+
+            while True:
+                decision = raw_input()
+                if decision == 'r' or decision == 'a' or decision == 's': break
+                else: print "Type `a', `r', or `s'."
+
             if decision == 'a' or decision == 's': break
 
     return segment, decision
