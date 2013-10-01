@@ -272,7 +272,7 @@ def strandgen(arms,link3,link5=None):
     strand_count = 1
     for key in sorted(strands.iterkeys()):
         print ""
-        print "strand %d" % (strand_count)
+        print "strand %d (%d bases)" % (strand_count,len(strands[key]))
 
         # print out strand in 5 base units
         print re.sub("(.{5})", "\\1 ", strands[key])
