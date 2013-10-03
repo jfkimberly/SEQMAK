@@ -124,36 +124,49 @@ def linker():
     link3 = linker3()
     link5 = linker5()
 
-    # join the arms to create strands
-    while True:
-        try:
-            for l5 in link5:
-                for l3_index, l3 in izip(count(), link3):
+    # join the 3'-linked and 5'-linked arms into 'linker_list' to create strands
+    linker_list = []
 
-                    if l3[-1] == l5[0]:
-                        forearms = l3[:]
-                        index = l3_index
-                        link3 = [x for x in link3 if x != l3]
+    try:
+        for l5 in link5:
 
-                    if l3[0] == l5[1]:
-                        postarms = l3[:]
-        #                index = l3_index
-                        link3 = [x for x in link3 if x != l3]
+            # Sequentially looks for a match between the first (last) element of
+            # all the elements of the 5'-linked arm list (link5), e.g. the '1'
+            # ('2') and '3' ('4') in [['1','2'],['3','4']], and the last (first)
+            # element of any element in the 3'-linked arm list (link3), e.g. the
+            # '1' ('2') and '3' ('4') in [['5','1'],['2','3'],['4','6']] and if
+            # found changes the value of 'index_fore' (index_post) to 1 and
+            # appends the joined arms into the 'linker_list' list.
+            index_fore = None
+            index_post = None
+            for l3 in link3:
 
-                link3.insert(index, forearms+postarms)
-            break
-        except (IndexError, UnboundLocalError):
-            print "Hmm, something seems off, try the 'link' command again."
-            break
+                if l3[-1] == l5[0]:
+                    forearms = l3[:]
+                    link3 = [x for x in link3 if x != l3]
+                    index_fore = 1
+
+                if l3[0] == l5[1]:
+                    postarms = l3[:]
+                    link3 = [x for x in link3 if x != l3]
+                    index_post = 1
+
+            if index_fore and index_post:
+                linker_list.append(forearms+postarms)
+
+        # add any remaining 3'-linked arms which are not connected by 5'-linked
+        # arms to the linker_list
+        linker_list += link3
+
+    except (IndexError, UnboundLocalError):
+        print "Hmm, something seems off, try the 'link' command again."
+
+    print "linker_list", linker_list
+
+    return linker_list
 
 
-    print "link3", link3
-    print "link5", link5
-
-    return link3, link5
-
-
-def crunch(arms,strands,link3,segment_list):
+def crunch(arms,strands,linker_list,segment_list):
     """ randomly generates or the user defines a sequence of bases for the each
     of the arms and returns dictionary 'arms' which consists of the arms as
     keys, e.g. arm1, arm2, etc., and each arms' sequence and its complementary
@@ -220,7 +233,7 @@ def crunch(arms,strands,link3,segment_list):
                 arms = armgen(arms,segment,crunch_dat)
 
                 # change the corresponding strand segment
-                strands = strandgen(arms,link3)
+                strands = strandgen(arms,linker_list)
 
                 break
 
@@ -239,22 +252,20 @@ def crunch(arms,strands,link3,segment_list):
                     arms = armgen(arms,segment,crunch_dat)
 
                     # change the corresponding strand segment
-                    strands = strandgen(arms,link3)
+                    strands = strandgen(arms,linker_list)
 
                 break
 
     return arms, strands, segment_list
 
 
-def strandgen(arms,link3,link5=None):
+def strandgen(arms,linker_list):
     """ 'strandgen (sg)' command; returns the dictionary DNA strands 'strands'
     created by combining the dictionary input 'arms'.
 
     """
 
-    if link5 is None: link5 = []
-
-    for strand_count, arm_num in izip(count(),link3):
+    for strand_count, arm_num in izip(count(),linker_list):
 
         try:
             temp_strand = ''

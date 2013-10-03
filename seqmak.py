@@ -50,7 +50,7 @@ def main():
 
         # 'link (l)' command
         elif command == 'link' or command == 'l':
-            l3_list, l5_list = commands.linker()
+            linker_list = commands.linker()
 
         # 'crunch (c)' command
         # produces random sequences of 
@@ -62,7 +62,7 @@ def main():
             else:
                 try:
                     arms,strands,segment_list =\
-                        commands.crunch(arms,strands,l3_list,segment_list)
+                        commands.crunch(arms,strands,linker_list,segment_list)
                     print segment_list
                 except TypeError:
                     print "Something's not right. Try 'crunch' again."
@@ -71,7 +71,7 @@ def main():
         # 
         elif command == 'strandgen' or command == 'sg':
             try:
-                strands = commands.strandgen(arms, l3_list, l5_list)
+                strands = commands.strandgen(arms, linker_list)
             except UnboundLocalError:
                 print "Something's wrong. Maybe you missed a step?"
 
