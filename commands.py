@@ -125,38 +125,79 @@ def linker():
     link5 = linker5()
 
     # join the 3'-linked and 5'-linked arms into 'linker_list' to create strands
-    linker_list = []
+#    linker_list = []
+# 
+#    try:
+#        for l5 in link5:
+# 
+#            # Sequentially looks for a match between the first (last) element of
+#            # all the elements of the 5'-linked arm list (link5), e.g. the '1'
+#            # ('2') and '3' ('4') in [['1','2'],['3','4']], and the last (first)
+#            # element of any element in the 3'-linked arm list (link3), e.g. the
+#            # '1' ('2') and '3' ('4') in [['5','1'],['2','3'],['4','6']] and if
+#            # found changes the value of 'index_fore' (index_post) to 1 and
+#            # appends the joined arms into the 'linker_list' list.
+#            index_fore = None
+#            index_post = None
+#            for l3 in link3:
+# 
+#                if l3[-1] == l5[0]:
+#                    forearms = l3[:]
+#                    link3 = [x for x in link3 if x != l3]
+#                    index_fore = 1
+# 
+#                if l3[0] == l5[1]:
+#                    postarms = l3[:]
+#                    link3 = [x for x in link3 if x != l3]
+#                    index_post = 1
+# 
+#            if index_fore and index_post:
+#                linker_list.append(forearms+postarms)
+# 
+#        # add any remaining 3'-linked arms which are not connected by 5'-linked
+#        # arms to the linker_list
+#        linker_list += link3
+# 
+#    except (IndexError, UnboundLocalError):
+#        print "Hmm, something seems off, try the 'link' command again."
+# 
+#    print "linker_list", linker_list
+# 
+#    return linker_list
 
     try:
         for l5 in link5:
-
+            print "l5", l5
             # Sequentially looks for a match between the first (last) element of
             # all the elements of the 5'-linked arm list (link5), e.g. the '1'
             # ('2') and '3' ('4') in [['1','2'],['3','4']], and the last (first)
             # element of any element in the 3'-linked arm list (link3), e.g. the
             # '1' ('2') and '3' ('4') in [['5','1'],['2','3'],['4','6']] and if
             # found changes the value of 'index_fore' (index_post) to 1 and
-            # appends the joined arms into the 'linker_list' list.
+            # appends the joined arms into a 'link3' and copy to 'linker_list'
+            # list.
             index_fore = None
             index_post = None
-            for l3 in link3:
+            for l3_index, l3 in izip(count(), link3):
 
                 if l3[-1] == l5[0]:
                     forearms = l3[:]
                     link3 = [x for x in link3 if x != l3]
                     index_fore = 1
+                    l3_ind1 = l3_index
 
                 if l3[0] == l5[1]:
                     postarms = l3[:]
                     link3 = [x for x in link3 if x != l3]
                     index_post = 1
+                    l3_ind2 = l3_index
 
-            if index_fore and index_post:
-                linker_list.append(forearms+postarms)
+            if (index_fore and index_post) and (l3_ind1 != l3_ind2):
+                link3.append(forearms+postarms)
+                
+            print "link3",link3
 
-        # add any remaining 3'-linked arms which are not connected by 5'-linked
-        # arms to the linker_list
-        linker_list += link3
+        linker_list = link3[:]
 
     except (IndexError, UnboundLocalError):
         print "Hmm, something seems off, try the 'link' command again."
@@ -164,6 +205,9 @@ def linker():
     print "linker_list", linker_list
 
     return linker_list
+
+
+
 
 
 def crunch(arms,strands,linker_list,segment_list):
