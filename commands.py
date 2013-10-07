@@ -125,9 +125,9 @@ def linker():
     link5 = linker5()
 
     # join the 3'-linked and 5'-linked arms into 'linker_list' to create strands
+    linker_list = []
     try:
         for l5 in link5:
-            print "l5", l5
             # Sequentially looks for a match between the first (last) element of
             # all the elements of the 5'-linked arm list (link5), e.g. the '1'
             # ('2') and '3' ('4') in [['1','2'],['3','4']], and the last (first)
@@ -137,37 +137,29 @@ def linker():
             # checks if the matching elements are from different strands
             # (l3_ind1 != l3_ind2) and appends the joined arms into 'link3' and
             # copies to 'linker_list' list for output.
-            index_fore = None
-            index_post = None
             for l3_index, l3 in izip(count(), link3):
 
                 if l3[-1] == l5[0]:
                     forearms = l3[:]
                     link3 = [x for x in link3 if x != l3]
-                    index_fore = 1
                     l3_ind1 = l3_index
 
                 if l3[0] == l5[1]:
                     postarms = l3[:]
                     link3 = [x for x in link3 if x != l3]
-                    index_post = 1
                     l3_ind2 = l3_index
 
-            if (index_fore and index_post) and (l3_ind1 != l3_ind2):
-                link3.append(forearms+postarms)
-                
-            print "link3",link3
-
-        linker_list = link3[:]
+            if (l3_ind1 != l3_ind2):
+                linker_list.append(forearms+postarms)
 
     except (IndexError, UnboundLocalError):
         print "Hmm, something seems off, try the 'link' command again."
 
+    # add remaining strands to 'linker_list'
+    linker_list += link3
+
     print "linker_list", linker_list
-
     return linker_list
-
-
 
 
 
