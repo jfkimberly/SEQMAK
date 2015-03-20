@@ -27,7 +27,7 @@ or
 
 `$ sudo apt-get install python-pip`
 	
-for linux machines.
+for GNU/linux machines.
 
 * Upgrade `pip`.
 

@@ -34,9 +34,10 @@ def help():
     print "4. crunch (c)"
     print "5. strandgen (sg)"
     print "6. repeatcheck (rp)"
-    print "7. save (sv)"
-    print "8. load (ld)"
-    print "9. exit"
+    print "7. dyadcheck (dc)"
+    print "8. save (sv)"
+    print "9. load (ld)"
+    print "10. exit"
 
     print "Use '--help' for more information. e.g. 'na --help'"
 
@@ -335,6 +336,55 @@ of repeats"
                         for strand_num, pos in reppos_list:
                             print "%s => %d" % (strand_num, pos + 1)
                         print ""
+
+
+def dyadcheck(strands):
+    """ 'dyadcheck' command; checks each strand for segments of dyad symmetry.
+
+    """
+
+    print "Enter segment size (in nt's) of dyad symmetry check:"
+
+    while True:
+        try:
+            segment_size = int(raw_input())
+        except (ValueError, UnboundLocalError):
+            print "Please enter only integers!"
+        finally:
+            break
+
+# dyad symmetry check
+    for strand_key in strands:
+        dyad_list = []
+
+        for base in range(len(strands[strand_key]) - segment_size + 1):
+
+            testseg = strands[strand_key][base:base + segment_size]
+            dyad = compgen(testseg)[::-1]
+            dyad_duplicates = False
+
+            # check dyad_list for duplicate dyads
+            for dyad_elem in dyad_list:
+                if testseg in dyad_elem:
+                    dyad_duplicates = True
+
+            if dyad_duplicates is False:
+                dyad_repeats = 0
+                # check for dyad symmetric segments
+                for rep_pos in range(len(strands[strand_key]) - segment_size + 1):
+                    if dyad == strands[strand_key][rep_pos:rep_pos + segment_size]:
+                        dyad_repeats += 1
+                        dyad_list.append((strand_key, rep_pos, dyad))
+
+                if dyad_repeats >= 1:
+                    print "'%s' has %d dyad symmetric repeats ('%s')" %\
+                        (testseg, dyad_repeats, dyad)
+                    print "strand # => base position"
+                    # print dyad symmetric repeat strand
+                    print "%s => " % (dyad_list[-dyad_repeats][0]),
+                    for strand_num, rep_pos, dyad in dyad_list[-dyad_repeats::]:
+                        print "%d," % (rep_pos + 1),
+                    print "\n"
 
 
 def save(arms, strands):

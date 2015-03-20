@@ -82,6 +82,13 @@ def main():
             except UnboundLocalError:
                 print "Something's wrong. Maybe you missed a step?"
 
+        # 'dyadcheck (dc) command
+        elif command == 'dyadcheck' or command == 'dc':
+            try:
+                commands.dyadcheck(strands)
+            except UnboundLocalError:
+                print "Something's wrong. Maybe you missed a step?"
+
         # 'save (sv)' command
         elif command == 'save' or command == 'sv':
             try:
@@ -94,9 +101,9 @@ def main():
                 strands = commands.load()
             except (UnboundLocalError, TypeError):
                 print "Try again?"
-            
-        else: print "What? Retype command!"
 
+        else:
+            print "What? Retype command!"
 
     return None
 
