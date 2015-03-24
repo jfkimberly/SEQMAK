@@ -138,19 +138,18 @@ def linker():
             # checks if the matching elements are from different strands
             # (l3_ind1 != l3_ind2) and appends the joined arms into 'link3' and
             # copies to 'linker_list' list for output.
-            for l3_index, l3 in izip(count(), link3):
-
+            forearms = None
+            postarms = None
+            for l3 in link3:
                 if l3[-1] == l5[0]:
                     forearms = l3[:]
                     link3 = [x for x in link3 if x != l3]
-                    l3_ind1 = l3_index
 
                 if l3[0] == l5[1]:
                     postarms = l3[:]
                     link3 = [x for x in link3 if x != l3]
-                    l3_ind2 = l3_index
 
-            if (l3_ind1 != l3_ind2):
+            if forearms and postarms:
                 linker_list.append(forearms+postarms)
 
     except (IndexError, UnboundLocalError):
@@ -181,7 +180,7 @@ def crunch(arms,strands,linker_list,segment_list):
     print "arm #, starting base, end base, CRITON size, # of repeats (default: None)"
     while True:
         try:
-            crunch_dat = map(int,raw_input().split(','))
+            crunch_dat = map(int, raw_input().split(','))
         except ValueError:
             print "Your input doesn't make any sense!"
             break
@@ -193,7 +192,8 @@ def crunch(arms,strands,linker_list,segment_list):
         if len(crunch_dat) == 4:
             repeat = 0
             arm, start, end, criton = crunch_dat
-        else: arm, start, end, criton, repeat = crunch_dat
+        else:
+            arm, start, end, criton, repeat = crunch_dat
 
     except (ValueError, UnboundLocalError) as error:
         print error
@@ -204,13 +204,12 @@ def crunch(arms,strands,linker_list,segment_list):
         critkey = 'crit' + str(segsize)
         print critkey
 
-
         while True:
 
             # produce a random segment 'segment' of 'segsize' and chooses to
             # (a)ccept, (r)eject, or (s)et in 'decision'.
             segment, decision = seggen(segsize, segment_list)
-            
+
             # check the number of repeats of 'segment' in 'strands' and changes
             # 'decision' accordingly
             decision = repeats(strands, segment, criton, repeat, decision)
@@ -262,7 +261,7 @@ def strandgen(arms,linker_list):
     created by combining the dictionary input 'arms'.
 
     """
-
+    print "linker_list", linker_list
     for strand_count, arm_num in izip(count(),linker_list):
 
         try:
