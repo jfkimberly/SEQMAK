@@ -151,6 +151,7 @@ def linker():
 
             if forearms and postarms:
                 linker_list.append(forearms+postarms)
+                print "linker_list", linker_list
 
     except (IndexError, UnboundLocalError):
         print "Hmm, something seems off, try the 'link' command again."
