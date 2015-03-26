@@ -18,16 +18,18 @@
 
 import commands
 
+
 def main():
     """ Main function to determine what command to enter """
 
     segment_list = []
 
     while True:
-        
+
         command = raw_input("Enter a command (type 'help' or 'h' for help):\n")
 
-        if command == 'exit': break
+        if command == 'exit':
+            break
 
         # 'help' command
         # prints a list of possible commands
@@ -37,9 +39,9 @@ def main():
         # 'newarm (na)' command
         # creates newarms and their corresponding segment sequences in a
         # dictionary 'arms'
-        elif command == 'newarms' or command == 'na': 
+        elif command == 'newarms' or command == 'na':
             arms = commands.newarms()
-                
+
         # 'show (s)' command
         # prints out the created arms
         elif command == 'show' or command == 's':
@@ -53,7 +55,7 @@ def main():
             linker_list = commands.linker()
 
         # 'crunch (c)' command
-        # produces random sequences of 
+        # produces random sequences of
         elif command == 'crunch' or command == 'c':
             try:
                 strands
@@ -61,14 +63,13 @@ def main():
                 print "Maybe you should generate your strands first ('strandgen')?"
             else:
                 try:
-                    arms,strands,segment_list =\
-                        commands.crunch(arms,strands,linker_list,segment_list)
+                    arms, strands, segment_list =\
+                        commands.crunch(arms, strands, linker_list, segment_list)
                     print segment_list
                 except TypeError:
                     print "Something's not right. Try 'crunch' again."
 
         # 'strandgen (sg)' command
-        # 
         elif command == 'strandgen' or command == 'sg':
             try:
                 strands = commands.strandgen(arms, linker_list)

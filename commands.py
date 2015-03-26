@@ -355,6 +355,7 @@ def dyadcheck(strands):
 # dyad symmetry check
     for strand_key in strands:
         dyad_list = []
+        print dyad_list
 
         for base in range(len(strands[strand_key]) - segment_size + 1):
 
@@ -380,7 +381,8 @@ def dyadcheck(strands):
                         (testseg, dyad_repeats, dyad)
                     print "strand # => base position"
                     # print dyad symmetric repeat strand
-                    print "%s => " % (dyad_list[-dyad_repeats][0]),
+                    print "%s =>" % (dyad_list[-dyad_repeats][0]),
+                    print "%d" % (base + 1)
                     for strand_num, rep_pos, dyad in dyad_list[-dyad_repeats::]:
                         print "%d," % (rep_pos + 1),
                     print "\n"
