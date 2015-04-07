@@ -355,7 +355,6 @@ def dyadcheck(strands):
 # dyad symmetry check
     for strand_key in strands:
         dyad_list = []
-        print dyad_list
 
         for base in range(len(strands[strand_key]) - segment_size + 1):
 
