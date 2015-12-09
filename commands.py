@@ -82,10 +82,10 @@ def newarms():
         # and the second element is its complementary segment. The specific
         # bases for both are generated when using the "crunch" function).
         # e.g. arm1:['xxxx','xxxx'], arm2:['xxxxxx','xxxxxx'], etc.
-        for arm_count in range(arm_num,arm_num+arm_numbers):
-            arms['arm'+str(arm_count)] = ['x'*arm_length,'x'*arm_length]
+        for arm_count in range(arm_num, arm_num+arm_numbers):
+            arms['arm'+str(arm_count)] = ['x'*arm_length, 'x'*arm_length]
 
-        print "Number of arms: %d, Arm length: %d" % (arm_numbers,arm_length)
+        print "Number of arms: %d, Arm length: %d" % (arm_numbers, arm_length)
 
         # asks user if more arms are needed
         while True:
@@ -162,17 +162,16 @@ def linker():
     return linker_list
 
 
-
-def crunch(arms,strands,linker_list,segment_list):
-    """ randomly generates or the user defines a sequence of bases for the each
+def crunch(arms, strands, linker_list, segment_list):
+    """randomly generates or the user defines a sequence of bases for the each
     of the arms and returns dictionary 'arms' which consists of the arms as
     keys, e.g. arm1, arm2, etc., and each arms' sequence and its complementary
     sequence as a 2-element list as its value.
 
     The user input is the arm number 'arm', the starting base index number of
     the arm segment to be randomly generated 'start', and the end base index
-    number of the arm segment to be randomly generated 'end'. 'criton' refers to
-    the length of the segment to be generated.
+    number of the arm segment to be randomly generated 'end'. 'criton' refers
+    to the length of the segment to be generated.
 
     """
 
@@ -184,7 +183,8 @@ def crunch(arms,strands,linker_list,segment_list):
         except ValueError:
             print "Your input doesn't make any sense!"
             break
-        else: break
+        else:
+            break
 
     # check if repeats should be allowed
     # (default is no input meaning no repeats allowed)
@@ -249,24 +249,24 @@ def crunch(arms,strands,linker_list,segment_list):
                     arms = armgen(arms,segment,crunch_dat)
 
                     # change the corresponding strand segment
-                    strands = strandgen(arms,linker_list)
+                    strands = strandgen(arms, linker_list)
 
                 break
 
     return arms, strands, segment_list
 
 
-def strandgen(arms,linker_list):
+def strandgen(arms, linker_list):
     """ 'strandgen (sg)' command; returns the dictionary DNA strands 'strands'
     created by combining the dictionary input 'arms'.
 
     """
-    print "linker_list", linker_list
-    for strand_count, arm_num in izip(count(),linker_list):
+#    print "linker_list", linker_list
+    for strand_count, arm_num in izip(count(), linker_list):
 
         try:
             temp_strand = ''
-            for arm_count, arm_index in izip(count(),arm_num):
+            for arm_count, arm_index in izip(count(), arm_num):
                 if arm_count % 2 == 0:
                     temp_strand += arms['arm'+arm_index][0]
                 else:
