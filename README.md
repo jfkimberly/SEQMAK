@@ -60,6 +60,14 @@ Usage
 Read the *Introduction* of the manual for information on running the program.
 
 
+Citations
+---------
+
+If you use this software, please cite it as:
+
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.59874.svg)](http://dx.doi.org/10.5281/zenodo.59874)
+
+
 
 
 [first]: <http://www.cell.com/biophysj/abstract/S0006-3495(83)84292-1>

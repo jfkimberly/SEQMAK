@@ -24,6 +24,7 @@ from functions import *
 
 strands = {}
 
+
 def help():
     """ 'help' command. prints out all possible commands. """
 
