@@ -1,4 +1,4 @@
-`SEQMAK`
+`SEQMAK`     [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.59874.svg)](http://dx.doi.org/10.5281/zenodo.59874)
 ========
 
 `SEQMAK` (pronounced SEC-mac) is a program for producing DNA sequences. Much of
